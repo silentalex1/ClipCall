@@ -162,7 +162,7 @@ body, html {
 }
 
 #controls-wrapper.editing {
-    transform: translateX(calc(-50% + 80px));
+    transform: translateX(calc(-50% + 120px));
 }
 
 #microphone-container {
@@ -201,11 +201,13 @@ body, html {
     opacity: 0;
     transform: translateX(-20px);
     transition: opacity 0.5s 0.3s ease, transform 0.5s 0.3s ease;
+    pointer-events: none;
 }
 
 #editing-options.visible {
     opacity: 1;
     transform: translateX(0);
+    pointer-events: auto;
 }
 
 .edit-option {
