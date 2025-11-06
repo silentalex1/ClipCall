@@ -13,14 +13,14 @@
                 <path id="wave" d="M 0 50 C 20 20, 40 80, 60 50 S 80 20, 100 50" stroke="white" fill="transparent" stroke-width="2"/>
             </svg>
             <div id="recording-icon-startup">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mic"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mic"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
             </div>
         </div>
     </div>
 
     <div id="main-ui" class="hidden">
         <nav class="navbar">
-            <div class="nav-brand">CallRecorder</div>
+            <div class="nav-brand">Call Recorder</div>
             <div class="menu-icon">
                 <div class="bar"></div>
                 <div class="bar"></div>
@@ -29,13 +29,16 @@
             <ul class="nav-links">
                 <li><a href="/">Home</a></li>
                 <li><a href="/savedaudios">Saved Audios</a></li>
-                <li><a href="#">About</a></li>
             </ul>
         </nav>
 
         <main class="container">
+            <div id="recording-status" class="hidden">
+                <div id="timer">0:00</div>
+                <button id="stop-button">Stop</button>
+            </div>
+            
             <canvas id="visualizer" class="hidden"></canvas>
-            <div id="timer" class="hidden">00:00</div>
 
             <div id="controls-wrapper">
                 <div id="microphone-container">
@@ -51,7 +54,7 @@
                     <div class="button-group">
                         <button id="download-btn">Download</button>
                         <button id="save-btn">Save to Gallery</button>
-                        <button id="cancel-btn">Cancel</button>
+                        <button id="cancel-btn">Discard</button>
                     </div>
                 </div>
             </div>
