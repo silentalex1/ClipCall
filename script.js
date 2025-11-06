@@ -1,7 +1,6 @@
 window.addEventListener('load', () => {
     const startupAnimation = document.getElementById('startup-animation');
     const mainUi = document.getElementById('main-ui');
-
     setTimeout(() => {
         startupAnimation.style.opacity = '0';
         mainUi.classList.remove('hidden');
@@ -34,7 +33,6 @@ const canvasCtx = visualizerCanvas.getContext('2d');
 let mediaRecorder;
 let audioChunks = [];
 let audioContext;
-let analyser;
 let animationFrameId;
 let timerInterval;
 let seconds = 0;
@@ -60,14 +58,13 @@ const stopTimer = () => clearInterval(timerInterval);
 
 const setupVisualizer = (stream) => {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    analyser = audioContext.createAnalyser();
+    const analyser = audioContext.createAnalyser();
     const source = audioContext.createMediaStreamSource(stream);
     source.connect(analyser);
     analyser.fftSize = 256;
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
     visualizerCanvas.classList.remove('hidden');
-    
     const draw = () => {
         animationFrameId = requestAnimationFrame(draw);
         analyser.getByteFrequencyData(dataArray);
@@ -86,10 +83,10 @@ const setupVisualizer = (stream) => {
 };
 
 const stopVisualizer = () => {
-    cancelAnimationFrame(animationFrameId);
+    if (animationFrameId) cancelAnimationFrame(animationFrameId);
     canvasCtx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
     visualizerCanvas.classList.add('hidden');
-    if (audioContext) audioContext.close();
+    if (audioContext && audioContext.state !== 'closed') audioContext.close();
 };
 
 const resetUI = () => {
@@ -138,7 +135,7 @@ microphoneIcon.addEventListener('click', async () => {
                         const userAudios = JSON.parse(localStorage.getItem(`${currentUser}_audios`)) || [];
                         userAudios.push({ url: reader.result, date: new Date().toLocaleString() });
                         localStorage.setItem(`${currentUser}_audios`, JSON.stringify(userAudios));
-                        alert('Audio saved to your gallery!');
+                        alert('Audio saved!');
                     };
                 } else {
                     accountUiContainer.classList.remove('hidden');
@@ -147,8 +144,10 @@ microphoneIcon.addEventListener('click', async () => {
             editingOptions.classList.add('visible');
             controlsWrapper.classList.add('editing');
             microphoneContainer.classList.remove('recording');
+            microphoneIcon.classList.remove('on');
             recordingStatus.classList.add('hidden');
             stopTimer();
+            stopVisualizer();
         };
         audioChunks = [];
         mediaRecorder.start();
