@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Call Recorder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="startup-animation">
+        <div class="soundwave-container">
+            <svg class="soundwave-svg" viewBox="0 0 100 100">
+                <path id="wave" d="M 0 50 C 20 20, 40 80, 60 50 S 80 20, 100 50" stroke="white" fill="transparent" stroke-width="2"/>
+            </svg>
+            <div id="recording-icon-startup">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mic"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-ui" class="hidden">
+        <nav class="navbar">
+            <div class="nav-brand">CallRecorder</div>
+            <div class="menu-icon">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/savedaudios">Saved Audios</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+        </nav>
+
+        <main class="container">
+            <canvas id="visualizer" class="hidden"></canvas>
+            <div id="timer" class="hidden">00:00</div>
+
+            <div id="controls-wrapper">
+                <div id="microphone-container">
+                    <svg id="microphone-icon" xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mic"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                    <div class="mic-effect"></div>
+                </div>
+
+                <div id="editing-options" class="hidden">
+                    <div class="edit-option">
+                        <label for="volume-control">Volume:</label>
+                        <input type="range" id="volume-control" min="0" max="1" step="0.01" value="1">
+                    </div>
+                    <div class="button-group">
+                        <button id="download-btn">Download</button>
+                        <button id="save-btn">Save to Gallery</button>
+                        <button id="cancel-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="account-ui-container" class="hidden">
+        <div id="account-ui">
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <h2>Login</h2>
+                        <input type="text" id="login-username" placeholder="Enter your username">
+                        <input type="password" id="login-password" placeholder="Enter your password">
+                        <button id="login-btn">Login</button>
+                        <p>Click <a href="#" id="show-create-account">here</a> to create an account.</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h2>Create Account</h2>
+                        <input type="text" id="create-username" placeholder="Enter your username">
+                        <input type="password" id="create-password" placeholder="Enter your password">
+                        <input type="text" id="how-did-you-find" placeholder="How did you find this website?">
+                        <button id="create-account-btn">Create Account</button>
+                        <p>Click <a href="#" id="show-login">here</a> to login.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
