@@ -108,18 +108,10 @@ body, html {
     margin-bottom: 1rem;
 }
 
-.audio-player {
+.media-player {
     width: 100%;
     margin-bottom: 1rem;
-}
-
-audio::-webkit-media-controls-panel {
-    background-color: #383838;
-}
-
-audio::-webkit-media-controls-play-button,
-audio::-webkit-media-controls-mute-button {
-    color: var(--primary-color);
+    border-radius: 8px;
 }
 
 .card-footer {
