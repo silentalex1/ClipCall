@@ -47,7 +47,11 @@
                 </div>
 
                 <div id="editing-options" class="hidden">
-                    <div class="edit-option">
+                    <div class="edit-option audio-only">
+                        <label for="trim-start">Trim Audio:</label>
+                        <input type="range" id="trim-start" min="0" max="100" value="0">
+                    </div>
+                    <div class="edit-option audio-only">
                         <label for="volume-control">Volume:</label>
                         <input type="range" id="volume-control" min="0" max="1" step="0.01" value="1">
                     </div>
@@ -59,6 +63,23 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <div id="recording-choice-modal" class="modal-container hidden">
+        <div class="modal-content">
+            <h2>What would you like to record?</h2>
+            <div class="modal-buttons">
+                <button id="record-mic-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                    <span>Microphone Only</span>
+                </button>
+                <button id="record-screen-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                    <span>Screen & Audio</span>
+                </button>
+            </div>
+            <button id="close-modal-btn" class="close-btn">&times;</button>
+        </div>
     </div>
 
     <div id="account-ui-container" class="hidden">
