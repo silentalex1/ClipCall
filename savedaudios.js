@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const getCurrentUser = () => {
         const currentUser = sessionStorage.getItem('currentUser');
         if (!currentUser) {
-            window.location.href = '/';
+            window.location.href = 'index.html';
         }
         return currentUser;
     };
@@ -24,9 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentUser = getCurrentUser();
         if (!currentUser) return;
 
-        const savedAudios = JSON.parse(localStorage.getItem(`${currentUser}_audios`)) || [];
+        const savedRecordings = JSON.parse(localStorage.getItem(`${currentUser}_audios`)) || [];
 
-        if (savedAudios.length === 0) {
+        if (savedRecordings.length === 0) {
             noAudiosMessage.classList.remove('hidden');
             audioGallery.classList.add('hidden');
         } else {
@@ -34,19 +34,23 @@ document.addEventListener('DOMContentLoaded', () => {
             audioGallery.classList.remove('hidden');
             audioGallery.innerHTML = '';
             
-            savedAudios.forEach((audioData, index) => {
+            savedRecordings.forEach((data, index) => {
                 const card = document.createElement('div');
                 card.classList.add('audio-card');
                 card.dataset.index = index;
+                const isVideo = data.url.startsWith('data:video/webm');
+                const mediaElement = isVideo
+                    ? `<video controls class="media-player" src="${data.url}"></video>`
+                    : `<audio controls class="media-player" src="${data.url}"></audio>`;
 
                 card.innerHTML = `
                     <div class="card-header">
                         <h3 class="audio-title">Recording #${index + 1}</h3>
                         <div class="audio-metadata">
-                            <span class="audio-date">${audioData.date}</span>
-                            <span class="audio-duration">Duration: ${formatDuration(audioData.duration)}</span>
+                            <span class="audio-date">${data.date}</span>
+                            <span class="audio-duration">Duration: ${formatDuration(data.duration)}</span>
                         </div>
-                        <audio controls class="audio-player" src="${audioData.url}"></audio>
+                        ${mediaElement}
                     </div>
                     <div class="card-footer">
                         <button class="card-action-btn delete-btn">
@@ -68,9 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentUser = getCurrentUser();
             
             if (confirm(`Are you sure you want to delete Recording #${indexToDelete + 1}?`)) {
-                let savedAudios = JSON.parse(localStorage.getItem(`${currentUser}_audios`)) || [];
-                savedAudios.splice(indexToDelete, 1);
-                localStorage.setItem(`${currentUser}_audios`, JSON.stringify(savedAudios));
+                let recordings = JSON.parse(localStorage.getItem(`${currentUser}_audios`)) || [];
+                recordings.splice(indexToDelete, 1);
+                localStorage.setItem(`${currentUser}_audios`, JSON.stringify(recordings));
                 renderGallery(); 
             }
         }
