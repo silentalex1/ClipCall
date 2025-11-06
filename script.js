@@ -230,7 +230,7 @@ createAccountBtn.addEventListener('click', () => {
         saveUsers(users);
         sessionStorage.setItem('currentUser', username);
         alert('Account created successfully!');
-        window.location.href = '/savedaudios';
+        window.location.href = 'savedaudios.html';
     }
 });
 
@@ -241,7 +241,7 @@ loginBtn.addEventListener('click', () => {
     if (user) {
         sessionStorage.setItem('currentUser', username);
         alert('Login successful!');
-        window.location.href = '/savedaudios';
+        window.location.href = 'savedaudios.html';
     } else {
         alert('Invalid username or password.');
     }
