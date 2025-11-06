@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Audio Gallery</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="savedaudios.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">Call Recorder</div>
+        <div class="nav-user-info">
+            <span id="welcome-message"></span>
+            <a href="/" class="go-back-btn">Go Back</a>
+        </div>
+        <div class="menu-icon">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/savedaudios">Saved Audios</a></li>
+        </ul>
+    </nav>
+
+    <main class="gallery-container">
+        <h1 class="gallery-title">My Audio Gallery</h1>
+        <div id="audio-gallery" class="audio-gallery-grid">
+        </div>
+        <div id="no-audios-message" class="hidden">
+            <div class="empty-state-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+            </div>
+            <h2>Your Gallery is Empty</h2>
+            <p>Go back to the <a href="/">homepage</a> to record your first audio clip!</p>
+        </div>
+    </main>
+
+    <script src="savedaudios.js"></script>
+</body>
+</html>
