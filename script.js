@@ -29,6 +29,10 @@ const timerDisplay = document.getElementById('timer');
 const stopButton = document.getElementById('stop-button');
 const visualizerCanvas = document.getElementById('visualizer');
 const canvasCtx = visualizerCanvas.getContext('2d');
+const choiceModal = document.getElementById('recording-choice-modal');
+const recordMicBtn = document.getElementById('record-mic-btn');
+const recordScreenBtn = document.getElementById('record-screen-btn');
+const closeModalBtn = document.getElementById('close-modal-btn');
 
 let mediaRecorder;
 let audioChunks = [];
@@ -36,6 +40,7 @@ let audioContext;
 let animationFrameId;
 let timerInterval;
 let seconds = 0;
+let currentRecordingType = 'audio';
 
 menuIcon.addEventListener('click', () => navLinks.classList.toggle('active'));
 
@@ -100,62 +105,110 @@ const resetUI = () => {
     audioChunks = [];
 };
 
+const showEditor = () => {
+    const audioOnlyOptions = document.querySelectorAll('.audio-only');
+    if (currentRecordingType === 'video') {
+        audioOnlyOptions.forEach(el => el.classList.add('hidden'));
+    } else {
+        audioOnlyOptions.forEach(el => el.classList.remove('hidden'));
+    }
+    editingOptions.classList.add('visible');
+    controlsWrapper.classList.add('editing');
+};
+
+const startRecording = (stream) => {
+    microphoneIcon.classList.add('on');
+    microphoneContainer.classList.add('recording');
+    recordingStatus.classList.remove('hidden');
+    startTimer();
+    const options = { mimeType: 'video/webm; codecs=vp8,opus' };
+    mediaRecorder = new MediaRecorder(stream, currentRecordingType === 'video' ? options : {});
+    mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
+    mediaRecorder.onstop = () => {
+        stream.getTracks().forEach(track => track.stop());
+        const blobType = currentRecordingType === 'video' ? 'video/webm' : 'audio/wav';
+        const fileExtension = currentRecordingType === 'video' ? 'webm' : 'wav';
+        const blob = new Blob(audioChunks, { type: blobType });
+        const url = URL.createObjectURL(blob);
+        downloadBtn.onclick = () => {
+            const a = document.createElement('a');
+            a.href = url; a.download = `recording.${fileExtension}`;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        };
+        saveBtn.onclick = () => {
+            const currentUser = sessionStorage.getItem('currentUser');
+            if (currentUser) {
+                const reader = new FileReader();
+                reader.readAsDataURL(blob);
+                reader.onloadend = () => {
+                    const audios = JSON.parse(localStorage.getItem(`${currentUser}_audios`)) || [];
+                    audios.push({ url: reader.result, date: new Date().toLocaleString(), duration: seconds });
+                    localStorage.setItem(`${currentUser}_audios`, JSON.stringify(audios));
+                    alert('Recording saved!');
+                };
+            } else {
+                accountUiContainer.classList.remove('hidden');
+            }
+        };
+        showEditor();
+        microphoneContainer.classList.remove('recording');
+        microphoneIcon.classList.remove('on');
+        recordingStatus.classList.add('hidden');
+        stopTimer();
+        stopVisualizer();
+    };
+    audioChunks = [];
+    mediaRecorder.start();
+    stream.getVideoTracks()[0]?.addEventListener('ended', handleStopRecording);
+};
+
+const startMicrophoneRecording = async () => {
+    try {
+        currentRecordingType = 'audio';
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        setupVisualizer(stream);
+        startRecording(stream);
+    } catch (error) {
+        alert("Microphone permission is required.");
+    }
+};
+
+const startScreenRecording = async () => {
+    try {
+        currentRecordingType = 'video';
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+        const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        setupVisualizer(micStream);
+        const combinedStream = new MediaStream([
+            ...screenStream.getVideoTracks(),
+            ...micStream.getAudioTracks(),
+            ...screenStream.getAudioTracks()
+        ]);
+        startRecording(combinedStream);
+    } catch (error) {
+        alert("Screen sharing permission is required.");
+    }
+};
+
 const handleStopRecording = () => {
     if (mediaRecorder && mediaRecorder.state === "recording") {
         mediaRecorder.stop();
     }
 };
 
-microphoneIcon.addEventListener('click', async () => {
+microphoneIcon.addEventListener('click', () => {
     if (mediaRecorder && mediaRecorder.state === "recording") return;
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        microphoneIcon.classList.add('on');
-        microphoneContainer.classList.add('recording');
-        recordingStatus.classList.remove('hidden');
-        setupVisualizer(stream);
-        startTimer();
-        mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
-        mediaRecorder.onstop = () => {
-            stream.getTracks().forEach(track => track.stop());
-            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-            const audioUrl = URL.createObjectURL(audioBlob);
-            downloadBtn.onclick = () => {
-                const a = document.createElement('a');
-                a.href = audioUrl; a.download = 'recorded_audio.wav';
-                document.body.appendChild(a); a.click(); document.body.removeChild(a);
-            };
-            saveBtn.onclick = () => {
-                const currentUser = sessionStorage.getItem('currentUser');
-                if (currentUser) {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(audioBlob);
-                    reader.onloadend = () => {
-                        const userAudios = JSON.parse(localStorage.getItem(`${currentUser}_audios`)) || [];
-                        userAudios.push({ url: reader.result, date: new Date().toLocaleString() });
-                        localStorage.setItem(`${currentUser}_audios`, JSON.stringify(userAudios));
-                        alert('Audio saved!');
-                    };
-                } else {
-                    accountUiContainer.classList.remove('hidden');
-                }
-            };
-            editingOptions.classList.add('visible');
-            controlsWrapper.classList.add('editing');
-            microphoneContainer.classList.remove('recording');
-            microphoneIcon.classList.remove('on');
-            recordingStatus.classList.add('hidden');
-            stopTimer();
-            stopVisualizer();
-        };
-        audioChunks = [];
-        mediaRecorder.start();
-    } catch (error) {
-        alert("Microphone permission is required.");
-    }
+    choiceModal.classList.remove('hidden');
 });
-
+closeModalBtn.addEventListener('click', () => choiceModal.classList.add('hidden'));
+recordMicBtn.addEventListener('click', () => {
+    choiceModal.classList.add('hidden');
+    startMicrophoneRecording();
+});
+recordScreenBtn.addEventListener('click', () => {
+    choiceModal.classList.add('hidden');
+    startScreenRecording();
+});
 stopButton.addEventListener('click', handleStopRecording);
 cancelBtn.addEventListener('click', resetUI);
 showCreateAccount.addEventListener('click', e => { e.preventDefault(); flipCard.classList.add('flipped'); });
