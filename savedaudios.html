@@ -3,40 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Audio Gallery</title>
+    <title>Saved Audios - Call Recorder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="savedaudios.css">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-brand">Call Recorder</div>
-        <div class="nav-user-info">
-            <span id="welcome-message"></span>
-            <a href="index.html" class="go-back-btn">Go Back</a>
-        </div>
-        <div class="menu-icon">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-        </div>
         <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="savedaudios.html">Saved Audios</a></li>
+            <li><a href="index.html">Record</a></li>
+            <li><a href="savedaudios.html" class="active">Saved Audios</a></li>
         </ul>
     </nav>
 
     <main class="gallery-container">
-        <h1 class="gallery-title">My Gallery</h1>
-        <div id="audio-gallery" class="audio-gallery-grid">
+        <div class="gallery-header">
+            <h1>My Gallery</h1>
+        </div>
+        <div id="gallery-grid" class="gallery-grid">
         </div>
         <div id="no-audios-message" class="hidden">
             <div class="empty-state-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
             </div>
             <h2>Your Gallery is Empty</h2>
-            <p>Go back to the <a href="index.html">homepage</a> to make a recording!</p>
+            <p>Go to the "Record" page to create your first recording!</p>
         </div>
     </main>
+
+    <div id="delete-confirmation-modal" class="modal-container hidden">
+        <div class="modal-content">
+            <h2>Are you sure?</h2>
+            <p>This action cannot be undone.</p>
+            <div class="modal-buttons">
+                <button id="cancel-delete-btn" class="btn btn-secondary">Cancel</button>
+                <button id="confirm-delete-btn" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
 
     <script src="savedaudios.js"></script>
 </body>
